@@ -31,9 +31,10 @@ namespace MMVII
 
         private :
             cPhotogrammetricProject  mPhProj;
-            std::string              mImagePathBW;
-            std::string              mImagePathRGB;
-        
+            std::string              mImagePath1;
+            std::string              mImagePath2;
+            std::vector<std::string> mOptions;
+            
     };
 
 
@@ -52,8 +53,8 @@ namespace MMVII
     cCollecSpecArg2007 & cAppli_TestGdal::ArgObl(cCollecSpecArg2007 & anArgObl)
     {
         return anArgObl
-                <<  Arg2007(mImagePathBW,"Image BW")
-                <<  Arg2007(mImagePathRGB,"Image RGB")
+               <<  Arg2007(mImagePath1,"Image BW",{eTA2007::FileImage})
+                <<  Arg2007(mImagePath2,"Image RGB",{eTA2007::FileImage})
             ;
     }
 
@@ -61,15 +62,16 @@ namespace MMVII
     cCollecSpecArg2007 & cAppli_TestGdal::ArgOpt(cCollecSpecArg2007 & anArgOpt)
     {
 
-        return    anArgOpt
+        return anArgOpt
+               << AOpt2007(mOptions,"Options","Options")
         ;
     }
 
 
     void cAppli_TestGdal::OpenTiffImage()
     {
-        StdOut() << "Ouverture de l'image : " << mImagePathBW << std::endl;
-        cDataFileIm2D aImage = cDataFileIm2D::Create(mImagePathBW, eForceGray::No);
+        StdOut() << "Ouverture de l'image : " << mImagePath1 << std::endl;
+        cDataFileIm2D aImage = cDataFileIm2D::Create(mImagePath1, eForceGray::No);
         StdOut() << "cDataFileIm2D creee" << std::endl;
         StdOut() << "Taille de l'image : " << aImage.Sz() << std::endl;
         StdOut() << "NbChannel : " << aImage.NbChannel() << std::endl;
@@ -81,8 +83,8 @@ namespace MMVII
 
     void cAppli_TestGdal::OpenTiffImageCIm2D()
     {
-        StdOut() << "Ouverture de l'image : " << mImagePathBW << std::endl;
-        cIm2D<tU_INT1> aIm2D = cIm2D<tU_INT1>::FromFile(mImagePathBW);
+        StdOut() << "Ouverture de l'image : " << mImagePath1 << std::endl;
+        cIm2D<tU_INT1> aIm2D = cIm2D<tU_INT1>::FromFile(mImagePath1);
         cDataIm2D<tU_INT1> & aDataIm2D = aIm2D.DIm();
         StdOut() << "Taille de l'image : " << aDataIm2D.Sz() << std::endl;
         StdOut() << "Valeur du pixel (5000, 8000) : " << (int) aDataIm2D.GetV(cPt2di(5000, 8000)) << std::endl;
@@ -92,9 +94,9 @@ namespace MMVII
 
     void cAppli_TestGdal::OpenTiffImageCIm2DBox()
     {
-        StdOut() << "Ouverture de l'image avec une boite de (6000, 8000, 9000, 10000): " << mImagePathBW << std::endl;
+        StdOut() << "Ouverture de l'image avec une boite de (6000, 8000, 9000, 10000): " << mImagePath1 << std::endl;
         cBox2di aBox = cBox2di(cPt2di(6000, 8000), cPt2di(9000, 10000));
-        cIm2D<tU_INT1> aIm2D = cIm2D<tU_INT1>::FromFile(mImagePathBW, aBox);
+        cIm2D<tU_INT1> aIm2D = cIm2D<tU_INT1>::FromFile(mImagePath1, aBox);
         StdOut() << "cDataFileIm2D créée" << std::endl;
         cDataIm2D<tU_INT1> & aDataIm2D = aIm2D.DIm();
         StdOut() << "Taille de l'image : " << aDataIm2D.Sz() << std::endl;
@@ -110,9 +112,9 @@ namespace MMVII
 
     void cAppli_TestGdal::OpenTiffRGBImageCIm2DBox()
     {
-        StdOut() << "Ouverture de l'image RGB avec une boite de (6000, 8000, 9000, 10000): " << mImagePathRGB << std::endl;
+        StdOut() << "Ouverture de l'image RGB avec une boite de (6000, 8000, 9000, 10000): " << mImagePath2 << std::endl;
         cBox2di aBox = cBox2di(cPt2di(6000, 8000), cPt2di(9000, 10000));
-        cRGBImage aRGBIm = cRGBImage::FromFile(mImagePathRGB, aBox);
+        cRGBImage aRGBIm = cRGBImage::FromFile(mImagePath2, aBox);
         StdOut() << "Valeur du pixel (0, 1) : " << aRGBIm.GetRGBPix(cPt2di(0, 1)) << std::endl;
         StdOut() << "Valeur du pixel (0.5, 0.5) : " << aRGBIm.GetRGBPixBL(cPt2dr(0.5, 0.5)) << std::endl;
     }
@@ -135,25 +137,24 @@ namespace MMVII
 
     void cAppli_TestGdal::WriteImage()
     {
+        StdOut() << "Options : " << std::endl;
+        for (const auto& o : mOptions)
+            StdOut() << '"' << o << '"' << std::endl;
+        StdOut() << "<END>"  << std::endl;
         // Open image
-        cBox2di aBox = cBox2di(cPt2di(7000, 8000), cPt2di(7100, 8100));
-        cIm2D<tU_INT1> aIm2D = cIm2D<tU_INT1>::FromFile(mImagePathBW, aBox);
+        auto aIm2D = cIm2D<tU_INT4>::FromFile(mImagePath1);
         // Create the new image of type eTyNums
-        std::string aCreatedImageName = "image1.tif";
-        cDataFileIm2D aCreatedImage = cDataFileIm2D::Create(aCreatedImageName, eTyNums::eTN_REAL8, cPt2di(100, 100), 1);
+        cDataFileIm2D aCreatedImage = cDataFileIm2D::Create(mImagePath2, eTyNums::eTN_U_INT1, cPt2di(1000, 1000), mOptions, 1);
         // Open the new image
+        std::cout << "created" << std::endl;
         // Data will be written in Type (tREAL4), but the image will be save in eTyNums (eTyNums::eTN_REAL8)
-        cIm2D<tREAL4> aCreatedIm2D = cIm2D<tREAL4>::FromFile(aCreatedImageName);
-
-        // Copy data
-        for (int x = aCreatedIm2D.DIm().X0(); x < aCreatedIm2D.DIm().X1(); x++)
+        auto aCreatedIm2D = cIm2D<tREAL4>(cPt2di(0,0),aCreatedImage.Sz());
+        
+        for (const auto& pt: aCreatedIm2D.DIm())
         {
-            for (int y = aCreatedIm2D.DIm().Y0(); y < aCreatedIm2D.DIm().Y1(); y++)
-            {
-                aCreatedIm2D.DIm().SetV(cPt2di(x, y), aIm2D.DIm().GetV(cPt2di(x, y)));
-            }
+            aCreatedIm2D.DIm().SetV(pt, pt.x() + pt.y());
+            
         }
-        // Save image
         aCreatedIm2D.Write(aCreatedImage, cPt2di(0, 0));
     }
 
@@ -161,7 +162,7 @@ namespace MMVII
     {
         // Open image in ((7000, 8000), (7100, 8100))
         cBox2di aBox = cBox2di(cPt2di(7000, 8000), cPt2di(7100, 8100));
-        cRGBImage aRGBImage = cRGBImage::FromFile(mImagePathRGB, aBox);
+        cRGBImage aRGBImage = cRGBImage::FromFile(mImagePath2, aBox);
         
         // Create the new image of size (200, 200). Type must be eTyNums::eTN_U_INT1 because it is RGB image
         std::string aCreatedImageName = "image2.tif";
@@ -189,7 +190,7 @@ namespace MMVII
     {
         // Open image in ((7000, 8000), (10000, 11000))
         cBox2di aBox = cBox2di(cPt2di(7000, 8000), cPt2di(10000, 11000));
-        cIm2D<tU_INT1> aIm2D = cIm2D<tU_INT1>::FromFile(mImagePathBW, aBox);
+        cIm2D<tU_INT1> aIm2D = cIm2D<tU_INT1>::FromFile(mImagePath1, aBox);
 
         // Save extracted image   
         //aIm2D.DIm().ToFile(mImageCreatePath);
@@ -205,10 +206,10 @@ namespace MMVII
     {
         // Open image in ((7000, 8000), (10000, 11000))
         cBox2di aBox = cBox2di(cPt2di(7000, 8000), cPt2di(10000, 11000));
-        cRGBImage aRGBImage = cRGBImage::FromFile(mImagePathRGB, aBox);
+        cRGBImage aRGBImage = cRGBImage::FromFile(mImagePath2, aBox);
 
         // Read Image in ((15000, 12000), (18000, 15000)). Then aBox in aRGBImage is useless
-        aRGBImage.Read(mImagePathRGB, cPt2di(0, 0), 1.0, cBox2di(cPt2di(15000, 12000), cPt2di(18000, 15000)));
+        aRGBImage.Read(mImagePath2, cPt2di(0, 0), 1.0, cBox2di(cPt2di(15000, 12000), cPt2di(18000, 15000)));
         
         
         // Create new image
@@ -226,7 +227,7 @@ namespace MMVII
     {
         // Open image in ((7000, 8000), (10000, 11000))
         cBox2di aBox = cBox2di(cPt2di(7000, 8000), cPt2di(10000, 11000));
-        cIm2D<tU_INT1> aIm2D = cIm2D<tU_INT1>::FromFile(mImagePathBW, aBox);
+        cIm2D<tU_INT1> aIm2D = cIm2D<tU_INT1>::FromFile(mImagePath1, aBox);
         // Create the new image of size (3000, 3000)
         std::string aCreatedImageName = "image5.tif";
         cDataFileIm2D aCreatedImage = cDataFileIm2D::Create(aCreatedImageName, eTyNums::eTN_REAL8, cPt2di(3000, 3000), 1);
@@ -255,6 +256,9 @@ namespace MMVII
     int cAppli_TestGdal::Exe()
     {
         mPhProj.FinishInit();  // the final construction of  photogrammetric project manager can only be done now
+        
+        WriteImage();
+        return EXIT_SUCCESS;
 
         OpenTiffImage();
         OpenTiffImageCIm2D();
