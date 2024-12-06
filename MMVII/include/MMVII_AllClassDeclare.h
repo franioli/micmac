@@ -227,7 +227,7 @@ class cChangSysCoordV2 ;
 
 // MMVII_Geom3D.h
 template <class Type> class cRotation3D;
-template <class Type> class cIsometrie3D;
+template <class Type> class cIsometry3D;
 template <class Type> class cSimilitud3D;
 template <class Type> class cTriangulation3D;
 

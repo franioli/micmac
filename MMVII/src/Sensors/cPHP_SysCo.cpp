@@ -193,10 +193,10 @@ void cPhotogrammetricProject::SaveStdCurSysCo(bool IsOri) const
 
 void cPhotogrammetricProject::CpSysIn2Out(bool  OriIn,bool OriOut) const
 {
-   StdOut() << "ENTER_CpSysIn2Out\n";
+   //StdOut() << "ENTER_CpSysIn2Out\n";
    tPtrSysCo aSysIn = OriIn ?  CurSysCoOri(true) : CurSysCoGCP(true);
 
-   StdOut() << "CpSysIn2OutCpSysIn2Out " << OriIn << " " << OriOut << " PTR=" << aSysIn.get() << "\n";
+   //StdOut() << "CpSysIn2OutCpSysIn2Out " << OriIn << " " << OriOut << " PTR=" << aSysIn.get() << "\n";
 
    if (aSysIn.get() == nullptr)
       return;
