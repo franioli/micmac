@@ -128,9 +128,9 @@ cSpecMMVII_Appli  TheSpec_MMV2_MesIm_2_MMV1
      "MMV2_MesIm_2_MMV1",
       Alloc_Test_MMV2_MesIm_2_MMV1,
       "Export image measurements format from MicMac v2 to MicMac v1",
-      {eApF::GCP},
-      {eApDT::GCP},
-      {eApDT::GCP},
+      {eApF::TieP},
+      {eApDT::TieP},
+      {eApDT::TieP},
       __FILE__
 );
 

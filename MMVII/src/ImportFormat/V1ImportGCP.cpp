@@ -3,12 +3,6 @@
 #include "MMVII_DeclareCste.h"
 #include "MMVII_BundleAdj.h"
 
-/**
-   \file cConvCalib.cpp  testgit
-
-   \brief file for conversion between calibration (change format, change model) and tests
-*/
-
 
 namespace MMVII
 {
@@ -120,10 +114,10 @@ cSpecMMVII_Appli  TheSpec_ConvertV1V2_GCPIM
 (
      "V1ConvertGCPIm",
       Alloc_ConvertV1V2_GCPIM,
-      "Convert Im&GCP measure from V1 to VII format",
-      {eApF::GCP},
-      {eApDT::GCP},
-      {eApDT::GCP},
+      "Convert image & gound measures from v1 to v2 format",
+      {eApF::GCP, eApF::TieP},
+      {eApDT::GCP, eApDT::TieP},
+      {eApDT::GCP, eApDT::TieP},
       __FILE__
 );
 

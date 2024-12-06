@@ -82,7 +82,7 @@ enum class eApF
                SysCo,        ///< Coordinate system
                Ori,        ///< Orientation
                Match,      ///< Dense Matching
-               GCP,       ///< Tie-Point processing
+               GCP,        ///< Ground point processing
                TieP,       ///< Tie-Point processing
                Lines,       ///< Lines processing
                TiePLearn,    ///< Tie-Point processing  - Learning step
@@ -142,7 +142,7 @@ enum class eApDT
               Ori,    ///< Orientation
               PCar,   ///< Tie Points
               TieP,   ///< Tie Points
-              GCP,   ///< Tie Points
+              GCP,   ///< Ground Points
               Lines,   ///< Tie Points
               Image,   ///< Image
               Orient,   ///< Orientations files
