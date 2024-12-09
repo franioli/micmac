@@ -143,7 +143,8 @@ enum class eApDT
               Ori,    ///< Orientation
               PCar,   ///< Tie Points
               TieP,   ///< Tie Points
-              GCP,   ///< Ground Points
+              GndPt2D,  ///< Ground Points image coords
+              GndPt3D,  ///< Ground Points ground coords
               Lines,   ///< Tie Points
               Image,   ///< Image
               Orient,   ///< Orientations files
