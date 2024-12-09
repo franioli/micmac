@@ -433,7 +433,8 @@ class cPhotogrammetricProject
 	  cDirsPhProj &   DPRadiomModel(); ///< Accessor
 	  cDirsPhProj &   DPMeshDev(); ///< Accessor
 	  cDirsPhProj &   DPMask(); ///< Accessor
-	  cDirsPhProj &   DPPointsMeasures(); ///< Accessor
+	  cDirsPhProj &   DPGndPt3D(); ///< Accessor
+	  cDirsPhProj &   DPGndPt2D(); ///< Accessor
 	  cDirsPhProj &   DPMetaData();    ///<  Accessor
 	  cDirsPhProj &   DPTieP();    ///<  Accessor
 	  cDirsPhProj &   DPMulTieP();    ///<  Accessor
@@ -447,7 +448,8 @@ class cPhotogrammetricProject
 	  const cDirsPhProj &   DPRadiomModel() const; ///< Accessor
 	  const cDirsPhProj &   DPMeshDev() const; ///< Accessor
 	  const cDirsPhProj &   DPMask() const; ///< Accessor
-	  const cDirsPhProj &   DPPointsMeasures() const; ///< Accessor
+	  const cDirsPhProj &   DPGndPt3D() const; ///< Accessor
+	  const cDirsPhProj &   DPGndPt2D() const; ///< Accessor
 	  const cDirsPhProj &   DPMetaData() const;    ///<  Accessor
 	  const cDirsPhProj &   DPTieP() const;    ///<  Accessor
 	  const cDirsPhProj &   DPMulTieP() const;    ///<  Accessor
@@ -760,7 +762,8 @@ class cPhotogrammetricProject
 	  cDirsPhProj     mDPRadiomModel;
 	  cDirsPhProj     mDPMeshDev;
 	  cDirsPhProj     mDPMask;
-	  cDirsPhProj     mDPPointsMeasures;  ///<  For GCP measures  Image + Grounds
+	  cDirsPhProj     mDPGndPt3D;         ///<  For ground point, measures/coords in image frame
+	  cDirsPhProj     mDPGndPt2D;         ///<  For ground point, measures/coords in ground frame
 	  cDirsPhProj     mDPTieP;            ///<  For Homologous point
 	  cDirsPhProj     mDPMulTieP;         ///<  For multiple Homologous point
 	  cDirsPhProj     mDPMetaData;

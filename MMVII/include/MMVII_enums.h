@@ -43,7 +43,8 @@ enum class eTA2007
                 MeshDev,       ///< Mesh Devlopment
                 Mask,          ///< Mask of image
                 MetaData,      ///< Meta data images
-                PointsMeasure, ///< Measure of point , 2D or 3D
+                GndPt3D,       ///< 3D Measure/coords of ground points
+                GndPt2D,       ///< 2D Measure/coords of ground points
                 TieP,          ///< Tie Points
                 MulTieP,       ///< Multiple Tie Points
                 RigBlock,      ///< Rigid bloc    // RIGIDBLOC
