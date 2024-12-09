@@ -567,7 +567,7 @@ class cAppli_CalibratedSpaceResection : public cMMVII_Appli
 
         std::string              mSpecImIn;   ///  Pattern of xml file
         cPhotogrammetricProject  mPhProj;
-        cSetMesImGCP             mSetMes;
+        cSetMesGndPt             mSetMes;
         cSet2D3D                 mSet23 ;
 
 	int                      mNbTriplets;
@@ -711,7 +711,7 @@ int cAppli_CalibratedSpaceResection::Exe()
              if (! aMes.VMeasures().empty())
 	     {
                  cPt2dr aPtIm  = aMes.VMeasures().at(0);
-	         cMes1GCP      aGCP =  mSetMes.MesGCP().at(aMes.NumPt());
+	         cMes1Gnd3D      aGCP =  mSetMes.MesGCP().at(aMes.NumPt());
 
 	         tREAL8 aRes = aCam.AngularProjResiudal(cPair2D3D(aPtIm,aGCP.mPt)) * aCal->F();
 

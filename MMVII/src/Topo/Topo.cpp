@@ -11,7 +11,7 @@ void cMMVII_BundleAdj::InitItereTopo()
 {
     if (mTopo)
     {
-        mTopo->FromData(mVGCP, mPhProj);
+        mTopo->FromData(mGCP, mPhProj);
         mTopo->AddToSys(mSetIntervUK); //after all is created
     }
 }
@@ -92,7 +92,7 @@ void cBA_Topo::ToFile(const std::string & aName) const
 }
 
 
-void cBA_Topo::AddPointsFromDataToGCP(cSetMesImGCP &aFullMesGCP, std::vector<cBA_GCP *> *aVGCP)
+void cBA_Topo::AddPointsFromDataToGCP(cSetMesGndPt &aFullMesGCP, std::vector<cBA_GCP *> *aVGCP)
 {
     // fill every ObsSet types
     if (!mAllTopoDataIn.mObsSetSimple.mObs.empty())
@@ -160,7 +160,7 @@ void cBA_Topo::AddPointsFromDataToGCP(cSetMesImGCP &aFullMesGCP, std::vector<cBA
 
     for (auto & aPointName: aAllPointsNamesNotFound)
     {
-        aFullMesGCP.Add1GCP( cMes1GCP(cPt3dr::Dummy(), aPointName) ); // points non-init
+        aFullMesGCP.Add1GCP( cMes1Gnd3D(cPt3dr::Dummy(), aPointName) ); // points non-init
     }
 
     mAllTopoDataIn.clear(); // if this function is called again, nothing more to add
@@ -418,7 +418,7 @@ bool cBA_Topo::tryInit(cTopoPoint & aPtToInit, tStationsMap &stationsMap, tSimpl
 
 //-------------------------------------------------------------------
 
-void BenchTopoComp1example(const std::pair<cTopoData, cSetMesGCP>& aBenchData, tREAL4 targetSigma0)
+void BenchTopoComp1example(const std::pair<cTopoData, cSetMesGnd3D>& aBenchData, tREAL4 targetSigma0)
 {
     double aLVM = 0.;
     int aNbIter = 15;
@@ -428,13 +428,13 @@ void BenchTopoComp1example(const std::pair<cTopoData, cSetMesGCP>& aBenchData, t
     cBA_Topo * aTopo = aBA.getTopo();
     aTopo->mAllTopoDataIn.InsertTopoData(aBenchData.first);
 
-    cSetMesImGCP aMesGCPtmp;
+    cSetMesGndPt aMesGCPtmp;
     aMesGCPtmp.AddMes3D(aBenchData.second);
     aTopo->AddPointsFromDataToGCP(aMesGCPtmp, nullptr);
     //here no 2d mes, fake it
     cSetMesPtOf1Im aSetMesIm;
     aMesGCPtmp.AddMes2D(aSetMesIm);
-    cSetMesImGCP * aMesGCP = aMesGCPtmp.FilterNonEmptyMeasure(0);
+    cSetMesGndPt * aMesGCP = aMesGCPtmp.FilterNonEmptyMeasure(0);
 
     aBA.AddGCP("topo", 1., {}, aMesGCP, false);
 

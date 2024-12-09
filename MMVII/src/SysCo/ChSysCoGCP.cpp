@@ -87,9 +87,9 @@ int cAppli_ChSysCoGCP::Exe()
     for (const auto & aNameGPCIN : aListNameGCPIn)
     {
     // StdOut() << "KKKKKKK " <<   aChSys.Value(cPt3dr(0,0,0)) << aChSys.Inverse(cPt3dr(0,0,0))  << "\n";
-        cSetMesGCP aMesGCP = cSetMesGCP::FromFile(aNameGPCIN);
+        cSetMesGnd3D aMesGCP = cSetMesGnd3D::FromFile(aNameGPCIN);
 	aMesGCP.ChangeCoord(aChSys);
-	mPhProj.SaveGCP(aMesGCP);
+	mPhProj.SaveGCP3D(aMesGCP);
     }
 
     // copy the System of coordinate in the GCP-folder

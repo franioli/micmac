@@ -24,16 +24,15 @@ cBA_GCP::~cBA_GCP()
 /*                cMMVII_BundleAdj::GCP                           */
 /* -------------------------------------------------------------- */
 
-void cMMVII_BundleAdj::AddGCP(const std::string & aName,tREAL8 aSigmaGCP,const  cStdWeighterResidual & aWeighter, cSetMesImGCP *  aMesGCP, bool verbose)
+void cMMVII_BundleAdj::AddGCP(const std::string & aName,tREAL8 aSigmaGCP,const  cStdWeighterResidual & aWeighter, cSetMesGndPt *  aMesGCP, bool verbose)
 {
-    //mVGCP.push_back(cBA_GCP());
-    cBA_GCP * aBA_GCP = new cBA_GCP;
-    mVGCP.push_back(aBA_GCP);
+    if (!mGCP)
+        mGCP = new cBA_GCP;
 
-    mVGCP.back()->mName           = aName;
-    mVGCP.back()->mMesGCP         = aMesGCP;
-    mVGCP.back()->mSigmaGCP       = aSigmaGCP;
-    mVGCP.back()->mGCPIm_Weighter = aWeighter;
+    mGCP->mName           = aName;
+    mGCP->mMesGCP         = aMesGCP;
+    mGCP->mSigmaGCP       = aSigmaGCP;
+    mGCP->mGCPIm_Weighter = aWeighter;
 
     //  mMesGCP = aMesGCP;
     //  mSigmaGCP = aSigmaGCP;
@@ -41,13 +40,13 @@ void cMMVII_BundleAdj::AddGCP(const std::string & aName,tREAL8 aSigmaGCP,const  
 
     if (verbose && mVerbose)
     {
-        StdOut()<<  "MESIM=" << aBA_GCP->mMesGCP->MesImOfPt().size() << " MesGCP=" << aBA_GCP->mMesGCP->MesGCP().size()  << std::endl;
+        StdOut()<<  "MESIM=" << mGCP->mMesGCP->MesImOfPt().size() << " MesGCP=" << mGCP->mMesGCP->MesGCP().size()  << std::endl;
     }
 }
 
 void cMMVII_BundleAdj::InitItereGCP()
 {
-    for (auto & aPtr_BA_GCP : mVGCP)
+    for (auto & aPtr_BA_GCP : mGCP)
     {
         //  This should no longer exist with new GCP handling
         MMVII_INTERNAL_ASSERT_strong(aPtr_BA_GCP->mMesGCP!=nullptr,"aPtr_BA_GCP->mMesGCP");
@@ -80,9 +79,9 @@ void cMMVII_BundleAdj::InitItereGCP()
 
 void cMMVII_BundleAdj::OneItere_OnePackGCP(cBA_GCP & aBA, bool verbose)
 {
-    const cSetMesImGCP   * aSet           = aBA.mMesGCP;
+    const cSetMesGndPt   * aSet           = aBA.mMesGCP;
     const tREAL8 & aSigmaGCP              = aBA.mSigmaGCP;
-    cSetMesImGCP&   aNewGCP               = aBA.mNewGCP;
+    cSetMesGndPt&   aNewGCP               = aBA.mNewGCP;
     std::vector<cPt3dr_UK*> & aGCP_UK     = aBA.mGCP_UK;
     cStdWeighterResidual& aGCPIm_Weighter = aBA.mGCPIm_Weighter;
 
@@ -94,7 +93,7 @@ void cMMVII_BundleAdj::OneItere_OnePackGCP(cBA_GCP & aBA, bool verbose)
     //   W>0  obs is an unknown "like others"
     //   W=0 , obs is fix , use schurr subst and fix the variables
     //   W<0 , obs is substitued
-    const std::vector<cMes1GCP> &      aVMesGCP = aSet->MesGCP();
+    const std::vector<cMes1Gnd3D> &      aVMesGCP = aSet->MesGCP();
     const std::vector<cMultipleImPt> & aVMesIm  = aSet->MesImOfPt() ;
     const std::vector<cSensorImage*> & aVSens   = aSet->VSens() ;
 
@@ -238,7 +237,7 @@ void cMMVII_BundleAdj::OneItere_OnePackGCP(cBA_GCP & aBA, bool verbose)
 
 void cMMVII_BundleAdj::OneItere_GCP(bool verbose)
 {
-     for (const auto & aBA_GCP_Ptr : mVGCP)
+     for (const auto & aBA_GCP_Ptr : mGCP)
      {
          MMVII_INTERNAL_ASSERT_strong(aBA_GCP_Ptr->mMesGCP!=nullptr,"aPtr_BA_GCP->mMesGCP");
          OneItere_OnePackGCP(*aBA_GCP_Ptr, verbose);
@@ -247,17 +246,17 @@ void cMMVII_BundleAdj::OneItere_GCP(bool verbose)
 
 void cMMVII_BundleAdj::Save_newGCP()
 {
-    if (mVGCP.size()>1)
+    if (mGCP.size()>1)
        MMVII_DEV_WARNING("For now dont handle save of multiple GCP");
 
-    if ( mVGCP.empty())
+    if ( mGCP.empty())
        return;
     // for (const auto & aBA_GCP_Ptr : mVGCP)
-    const auto & aBA_GCP_Ptr = mVGCP.at(0);
+    const auto & aBA_GCP_Ptr = mGCP.at(0);
     {
         if (aBA_GCP_Ptr->mMesGCP  && mPhProj->DPGndPt3D().DirOutIsInit())
         {
-            mPhProj->SaveGCP(aBA_GCP_Ptr->mNewGCP.ExtractSetGCP("NewGCP"));
+            mPhProj->SaveGCP3D(aBA_GCP_Ptr->mNewGCP.ExtractSetGCP("NewGCP"));
             for (const auto & aMes1Im : aBA_GCP_Ptr->mMesGCP->MesImInit())
                  mPhProj->SaveMeasureIm(aMes1Im);
             mPhProj->SaveCurSysCoGCP(mPhProj->CurSysCo(mPhProj->DPGndPt3D()));

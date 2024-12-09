@@ -60,7 +60,7 @@ int cAppli_MMV2_MesIm_2_MMV1::Exe()
     for (const std::string& aCImage : aVecIm)
     {
 
-		cSetMesImGCP aSetMes;
+		cSetMesGndPt aSetMes;
 
 		//load GCPs
 		mPhProj.LoadGCP(aSetMes);

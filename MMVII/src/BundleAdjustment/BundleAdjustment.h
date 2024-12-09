@@ -291,10 +291,9 @@ class cBA_GCP
           cBA_GCP();
           ~cBA_GCP();
 
-          std::string              mName;   // Name of folder 
-          cSetMesImGCP *           mMesGCP;
-          cSetMesImGCP             mNewGCP; // set of gcp after adjust
-	  tREAL8                   mSigmaGCP;
+          cSetMesGndPt             mMesGCP; //< initial
+          cSetMesGndPt             mNewGCP; //< set of gcp after adjust
+          tREAL8                   mSigmaGCP;
           cStdWeighterResidual     mGCPIm_Weighter;
           std::vector<cPt3dr_UK*>  mGCP_UK;
 };
@@ -337,8 +336,9 @@ class cMMVII_BundleAdj
 
           bool AddTopo(const std::string & aTopoFilePath); // TOPO
           ///  =======  Add GCP, can be measure or measure & object
-          void AddGCP(const std::string & aName, tREAL8 aSigmaGCP, const  cStdWeighterResidual& aWeightIm, cSetMesImGCP *, bool verbose=true);
-          std::vector<cBA_GCP*> & getVGCP() { return mVGCP;}
+          void AddGCP3D(const std::string & aName, tREAL8 aSigmaGCP, const  cStdWeighterResidual& aWeightIm, cSetMesGndPt *, bool verbose=true);
+          void AddGCP2D(const std::string & aName, tREAL8 aSigmaGCP, const  cStdWeighterResidual& aWeightIm, cSetMesGndPt *, bool verbose=true);
+          cBA_GCP* getVGCP() { return mGCP;}
 
 	  ///  ============  Add multiple tie point ============
 	  void AddMTieP(const std::string & aName,cComputeMergeMulTieP  * aMTP,const cStdWeighterResidual & aWIm);
@@ -430,16 +430,9 @@ class cMMVII_BundleAdj
           // ===================  Information to use ==================
 	     
 	          // - - - - - - - - GCP  - - - - - - - - - - -
-          std::vector<cBA_GCP*>        mVGCP;
-          //  cSetMesImGCP *           mMesGCP;
-          //  cSetMesImGCP             mNewGCP; // set of gcp after adjust
-	  //  tREAL8                   mSigmaGCP;
-          //  cStdWeighterResidual     mGCPIm_Weighter;
-          //  std::vector<cPt3dr_UK*>  mGCP_UK;
+          cBA_GCP*        mGCP;
 
 	         // - - - - - - - - MTP  - - - - - - - - - - -
-	  // cComputeMergeMulTieP *   mMTP;
-          // cStdWeighterResidual     mTieP_Weighter;
           std::vector<cBA_TieP*>   mVTieP;
 
                  // - - - - - - -   Bloc Rigid - - - - - - - -

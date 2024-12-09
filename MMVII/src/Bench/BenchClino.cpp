@@ -169,10 +169,10 @@ namespace MMVII
         }
     }
 
-    void AddGCP(const std::string& aPName, const cPt3dr& aCoords, const cSensorCamPC& aSensorCamPC, cSetMesGCP& aSetMesGCP, cSetMesPtOf1Im& aSetMesPtOf1Im, const tREAL8& aSigma){
+    void AddGCP(const std::string& aPName, const cPt3dr& aCoords, const cSensorCamPC& aSensorCamPC, cSetMesGnd3D& aSetMesGCP, cSetMesPtOf1Im& aSetMesPtOf1Im, const tREAL8& aSigma){
         cPt2dr aP1Image = aSensorCamPC.Ground2Image(aCoords);
-        aSetMesGCP.AddMeasure(cMes1GCP(aCoords, aPName, 0.0));
-        aSetMesPtOf1Im.AddMeasure(cMesIm1Pt(aP1Image, aPName, aSigma));
+        aSetMesGCP.AddMeasure3D(cMes1Gnd3D(aCoords, aPName, "?", 0.0));
+        aSetMesPtOf1Im.AddMeasure(cMesIm1Pt(aP1Image, aPName, "?", aSigma));
     }
 
     tREAL8 ComputeNeedleMeasure(const cRotation3D<tREAL8>& aBoresight, const cRotation3D<tREAL8>& aCameraRot){
@@ -277,7 +277,7 @@ namespace MMVII
         // Now, only orientation of camera is not frozen
 
         // Add GCPs
-        cSetMesGCP aSetMesGCP = cSetMesGCP();
+        cSetMesGnd3D aSetMesGCP = cSetMesGnd3D();
         cSetMesPtOf1Im aSetMesPtOf1Im = cSetMesPtOf1Im();
 
         for (auto & [aPName, aCoords] : mVPoints)
@@ -285,7 +285,7 @@ namespace MMVII
             AddGCP(aPName, aCoords, aSensorCamPC, aSetMesGCP, aSetMesPtOf1Im, aGCPSigma);
         }
         
-        cSetMesImGCP* aSetMesImGCP = new cSetMesImGCP();
+        cSetMesGndPt* aSetMesImGCP = new cSetMesGndPt();
         aSetMesImGCP->AddMes3D(aSetMesGCP);
         aSetMesImGCP->AddMes2D(aSetMesPtOf1Im, &aNewSensorCamPC);
         
@@ -399,7 +399,7 @@ namespace MMVII
         // Now, only orientation and position of camera are not frozen
 
         // Add GCPs
-        cSetMesGCP aSetMesGCP = cSetMesGCP();
+        cSetMesGnd3D aSetMesGCP = cSetMesGnd3D();
         cSetMesPtOf1Im aSetMesPtOf1Im = cSetMesPtOf1Im();
 
         for (auto & [aPName, aCoords] : mVPoints)
@@ -407,7 +407,7 @@ namespace MMVII
             AddGCP(aPName, aCoords, aSensorCamPC, aSetMesGCP, aSetMesPtOf1Im, aGCPSigma);
         }
         
-        cSetMesImGCP* aSetMesImGCP = new cSetMesImGCP();
+        cSetMesGndPt* aSetMesImGCP = new cSetMesGndPt();
         aSetMesImGCP->AddMes3D(aSetMesGCP);
         aSetMesImGCP->AddMes2D(aSetMesPtOf1Im, &aNewSensorCamPC);
         

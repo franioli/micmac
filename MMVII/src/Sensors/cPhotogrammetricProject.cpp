@@ -277,7 +277,8 @@ cPhotogrammetricProject::cPhotogrammetricProject(cMMVII_Appli & anAppli) :
     mDPRadiomModel    (eTA2007::RadiomModel,*this),
     mDPMeshDev        (eTA2007::MeshDev,*this),
     mDPMask           (eTA2007::Mask,*this),
-    mDPPointsMeasures (eTA2007::PointsMeasure,*this),
+    mDPGndPt3D        (eTA2007::GndPt3D,*this),
+    mDPGndPt2D        (eTA2007::GndPt2D,*this),
     mDPTieP           (eTA2007::TieP,*this),
     mDPMulTieP        (eTA2007::MulTieP,*this),
     mDPMetaData       (eTA2007::MetaData,*this),
@@ -315,7 +316,8 @@ void cPhotogrammetricProject::FinishInit()
     mDPRadiomModel.Finish();
     mDPMeshDev.Finish();
     mDPMask.Finish();
-    mDPPointsMeasures.Finish();
+    mDPGndPt3D.Finish();
+    mDPGndPt2D.Finish();
     mDPTieP.Finish();
     mDPMulTieP.Finish();
     mDPMetaData.Finish();
@@ -379,7 +381,8 @@ cDirsPhProj &   cPhotogrammetricProject::DPRadiomData() {return mDPRadiomData;}
 cDirsPhProj &   cPhotogrammetricProject::DPRadiomModel() {return mDPRadiomModel;}
 cDirsPhProj &   cPhotogrammetricProject::DPMeshDev() {return mDPMeshDev;}
 cDirsPhProj &   cPhotogrammetricProject::DPMask() {return mDPMask;}
-cDirsPhProj &   cPhotogrammetricProject::DPPointsMeasures() {return mDPPointsMeasures;}
+cDirsPhProj &   cPhotogrammetricProject::DPGndPt3D() {return mDPGndPt3D;}
+cDirsPhProj &   cPhotogrammetricProject::DPGndPt2D() {return mDPGndPt2D;}
 cDirsPhProj &   cPhotogrammetricProject::DPMetaData() {return mDPMetaData;}
 cDirsPhProj &   cPhotogrammetricProject::DPTieP() {return mDPTieP;}
 cDirsPhProj &   cPhotogrammetricProject::DPMulTieP() {return mDPMulTieP;}
@@ -393,7 +396,8 @@ const cDirsPhProj &   cPhotogrammetricProject::DPRadiomData() const {return mDPR
 const cDirsPhProj &   cPhotogrammetricProject::DPRadiomModel() const {return mDPRadiomModel;}
 const cDirsPhProj &   cPhotogrammetricProject::DPMeshDev() const {return mDPMeshDev;}
 const cDirsPhProj &   cPhotogrammetricProject::DPMask() const {return mDPMask;}
-const cDirsPhProj &   cPhotogrammetricProject::DPPointsMeasures() const {return mDPPointsMeasures;}
+const cDirsPhProj &   cPhotogrammetricProject::DPGndPt3D() const {return mDPGndPt3D;}
+const cDirsPhProj &   cPhotogrammetricProject::DPGndPt2D() const {return mDPGndPt2D;}
 const cDirsPhProj &   cPhotogrammetricProject::DPMetaData() const {return mDPMetaData;}
 const cDirsPhProj &   cPhotogrammetricProject::DPTieP() const {return mDPTieP;}
 const cDirsPhProj &   cPhotogrammetricProject::DPMulTieP() const {return mDPMulTieP;}
@@ -734,12 +738,12 @@ cIm2D<tU_INT1>  cPhotogrammetricProject::MaskOfImage(const std::string & aNameIm
 
 void cPhotogrammetricProject::SaveMeasureIm(const cSetMesPtOf1Im &  aSetM) const
 {
-     aSetM.ToFile(mDPPointsMeasures.FullDirOut() +aSetM.StdNameFile());
+     aSetM.ToFile(mDPGndPt2D.FullDirOut() +aSetM.StdNameFile());
 }
 
 std::string cPhotogrammetricProject::NameMeasureGCPIm(const std::string & aNameIm,bool isIn) const
 {
-    return  mDPPointsMeasures.FullDirInOut(isIn) + cSetMesPtOf1Im::StdNameFileOfIm(FileOfPath(aNameIm,false)) ;
+    return  mDPGndPt2D.FullDirInOut(isIn) + cSetMesPtOf1Im::StdNameFileOfIm(FileOfPath(aNameIm,false)) ;
 }
 
 
@@ -750,7 +754,7 @@ bool cPhotogrammetricProject::HasMeasureIm(const std::string & aNameIm,bool InDi
 
 bool cPhotogrammetricProject::HasMeasureImFolder(const std::string & aFolder,const std::string & aNameIm) const
 {
-     cAutoChgRestoreDefFolder  aCRDF(aFolder,DPPointsMeasures()); // Chg Folder and restore at destruction
+     cAutoChgRestoreDefFolder  aCRDF(aFolder,DPGndPt2D()); // Chg Folder and restore at destruction
      return HasMeasureIm(aNameIm,true);
 }
 
@@ -763,15 +767,15 @@ cSetMesPtOf1Im cPhotogrammetricProject::LoadMeasureIm(const std::string & aNameI
    return cSetMesPtOf1Im::FromFile(NameMeasureGCPIm(aNameIm,isIn));
 }
 
-void cPhotogrammetricProject::SaveGCP(const cSetMesGCP & aMGCP) const
+void cPhotogrammetricProject::SaveGCP3D(const cSetMesGnd3D & aMGCP) const
 {
-     aMGCP.ToFile(mDPPointsMeasures.FullDirOut() + aMGCP.StdNameFile());
+     aMGCP.ToFile(mDPGndPt3D.FullDirOut() + aMGCP.StdNameFile());
      // aMGCP.ToFile(mDPPointsMeasures.FullDirOut() + cSetMesGCP::ThePrefixFiles + aMGCP.Name() + "." + TaggedNameDefSerial());
 }
 
 std::string cPhotogrammetricProject::GCPPattern(const std::string & aArgPatFiltr) const
 {
-    return (aArgPatFiltr=="") ? (cSetMesGCP::ThePrefixFiles + ".*." +TaggedNameDefSerial())  : aArgPatFiltr;
+    return (aArgPatFiltr=="") ? (cSetMesGnd3D::ThePrefixFiles + ".*." +TaggedNameDefSerial())  : aArgPatFiltr;
 }
 
 std::vector<std::string>  cPhotogrammetricProject::ListFileGCP(const std::string & aArgPatFiltr) const
@@ -788,7 +792,7 @@ std::vector<std::string>  cPhotogrammetricProject::ListFileGCP(const std::string
    return aRes;
 }
 
-void cPhotogrammetricProject::LoadGCP(cSetMesImGCP& aSetMes,const std::string & aArgPatFiltr,const std::string & aFiltrNameGCP,
+void cPhotogrammetricProject::LoadGCP(cSetMesGndPt& aSetMes,const std::string & aArgPatFiltr,const std::string & aFiltrNameGCP,
                                       const std::string & aFiltrAdditionalInfoGCP) const
 {
    std::vector<std::string> aListFileGCP = ListFileGCP(aArgPatFiltr);
@@ -796,7 +800,7 @@ void cPhotogrammetricProject::LoadGCP(cSetMesImGCP& aSetMes,const std::string & 
 
    for (const auto  & aNameFile : aListFileGCP)
    {
-       cSetMesGCP aMesGCP = cSetMesGCP::FromFile(aNameFile);
+       cSetMesGnd3D aMesGCP = cSetMesGnd3D::FromFile(aNameFile);
        if ( (!aFiltrNameGCP.empty()) || (!aFiltrAdditionalInfoGCP.empty()) )
           aMesGCP = aMesGCP.Filter(aFiltrNameGCP, aFiltrAdditionalInfoGCP);
        aSetMes.AddMes3D(aMesGCP);
@@ -831,15 +835,15 @@ cSetMesPtOf1Im cPhotogrammetricProject::LoadMeasureImFromFolder(const std::strin
 }
 
 
-void cPhotogrammetricProject::LoadGCPFromFolder
+void cPhotogrammetricProject::LoadGCP3DFromFolder
      (const std::string & aFolder,
-          cSetMesImGCP& aSetMes,
+          cSetMesGndPt& aSetMes,
           std::pair<cBA_Topo *, std::vector<cBA_GCP*>*> aTopoAddPointsInfo,
           const std::string & aArgPatFiltr,
           const std::string & aFiltrNameGCP,
           const std::string & aFiltrAdditionalInfoGCP) const
 {
-     cDirsPhProj& aDPPM = const_cast<cPhotogrammetricProject *>(this)->DPPointsMeasures();
+     cDirsPhProj& aDPPM = const_cast<cPhotogrammetricProject *>(this)->DPGndPt3D();
      // Save current orientation and fix new
      std::string aDirInit = aDPPM.DirIn();
      aDPPM.SetDirIn(aFolder);
@@ -861,23 +865,23 @@ void cPhotogrammetricProject::CpGCPPattern(const std::string & aDirIn,const std:
 
 void cPhotogrammetricProject::CpGCP() const
 {
-	CpGCPPattern(mDPPointsMeasures.FullDirIn(),mDPPointsMeasures.FullDirOut());
+	CpGCPPattern(mDPGndPt3D.FullDirIn(),mDPGndPt3D.FullDirOut());
 }
 
 void cPhotogrammetricProject::CpMeasureIm() const
 {
     CopyPatternFile
     (
-        mDPPointsMeasures.FullDirIn(),
+        mDPGndPt2D.FullDirIn(),
 	cSetMesPtOf1Im::ThePrefixFiles+ ".*"+ TaggedNameDefSerial(),
-        mDPPointsMeasures.FullDirOut()
+        mDPGndPt2D.FullDirOut()
     );
 }
 
 
 
 
-void cPhotogrammetricProject::LoadIm(cSetMesImGCP& aSetMes,const std::string & aNameIm,cSensorImage * aSIm,bool SVP) const
+void cPhotogrammetricProject::LoadIm(cSetMesGndPt& aSetMes,const std::string & aNameIm,cSensorImage * aSIm,bool SVP) const
 {
 //    std::string aDir = mDPPointsMeasures.FullDirIn();
    //cSetMesPtOf1Im  aSetIm = cSetMesPtOf1Im::FromFile(aDir+cSetMesPtOf1Im::StdNameFileOfIm(aNameIm));
@@ -894,7 +898,7 @@ void cPhotogrammetricProject::LoadIm(cSetMesImGCP& aSetMes,const std::string & a
 void cPhotogrammetricProject::LoadImFromFolder
      (
            const std::string & aFolder,
-           cSetMesImGCP& aSetMes,
+           cSetMesGndPt& aSetMes,
            const std::string & aNameIm,
            cSensorImage * aSIm,bool SVP
      ) const
@@ -909,14 +913,14 @@ void cPhotogrammetricProject::LoadImFromFolder
      aDPPM.SetDirIn(aDirInit);
 }
 
-void cPhotogrammetricProject::LoadIm(cSetMesImGCP& aSetMes,cSensorImage & aSIm) const
+void cPhotogrammetricProject::LoadIm(cSetMesGndPt& aSetMes,cSensorImage & aSIm) const
 {
      LoadIm(aSetMes,aSIm.NameImage(),&aSIm);
 }
 
 cSet2D3D  cPhotogrammetricProject::LoadSet32(const std::string & aNameIm) const
 {
-    cSetMesImGCP aSetMes;
+    cSetMesGndPt aSetMes;
 
     LoadGCP(aSetMes);
     LoadIm(aSetMes,aNameIm);

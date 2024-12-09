@@ -104,7 +104,7 @@ int cAppli_CreateRTL::Exe()
         }
     }
 
-    cSetMesImGCP aMesIm;
+    cSetMesGndPt aMesIm;
     cWeightAv<tREAL8,cPt3dr> aAvgGCP;
     if (mPhProj.DPPointsMeasures().DirInIsInit())
     {

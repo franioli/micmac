@@ -100,7 +100,7 @@ cCollecSpecArg2007 & cAppliTestSensor::ArgOpt(cCollecSpecArg2007 & anArgOpt)
 void cAppliTestSensor::TestGroundTruth(const  cSensorImage & aSI) const
 {
     // Load mesure from standard MMVII project
-    cSetMesImGCP aSetMes;
+    cSetMesGndPt aSetMes;
     mPhProj.LoadGCP(aSetMes);
     mPhProj.LoadIm(aSetMes,aSI.NameImage());
     cSet2D3D aSetM23;
@@ -127,7 +127,7 @@ void cAppliTestSensor::TestGroundTruth(const  cSensorImage & aSI) const
 
 void cAppliTestSensor::ExportMeasures(const  cSensorImage & aSI) const
 {
-    cSetMesGCP      aSet3D(aSI.NameImage());
+    cSetMesGnd3D      aSet3D(aSI.NameImage());
     cSetMesPtOf1Im  aSet2D(aSI.NameImage());
     int aNb=0;
     for (const auto & aPair : mCurS23.Pairs())
@@ -135,10 +135,10 @@ void cAppliTestSensor::ExportMeasures(const  cSensorImage & aSI) const
         std::string aName = "Pt_"+ ToStr(aNb) + "-" + aSI.NameImage();
         aNb++;
         aSet2D.AddMeasure(cMesIm1Pt(aSI.Ground2Image(aPair.mP3),aName,1.0));
-        aSet3D.AddMeasure(cMes1GCP(aPair.mP3,aName,1.0));
+        aSet3D.AddMeasure3D(cMes1Gnd3D(aPair.mP3,aName,1.0));
 
     }
-    mPhProj.SaveGCP(aSet3D);
+    mPhProj.SaveGCP3D(aSet3D);
     mPhProj.SaveMeasureIm(aSet2D);
 }
 

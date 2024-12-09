@@ -120,15 +120,15 @@ void  cAppliTopoAdj::AddOneSetGCP(const std::vector<std::string> & aVParStd)
     MMVII_INTERNAL_ASSERT_User(aGCPW[0]>0., eTyUEr::eUnClassedError, "Error: GCPW must be > 0")
 
     //  load the GCP
-    cSetMesImGCP  aFullMesGCP; 
-    mPhProj.LoadGCPFromFolder(aFolder,aFullMesGCP,
+    cSetMesGndPt  aFullMesGCP; 
+    mPhProj.LoadGCP3DFromFolder(aFolder,aFullMesGCP,
                               {mBA.getTopo(),&mBA.getVGCP()},
                               "",mGCPFilter,mGCPFilterAdd);
 
     //here no 2d mes, fake it
     cSetMesPtOf1Im aSetMesIm("none");
     aFullMesGCP.AddMes2D(aSetMesIm);
-    cSetMesImGCP * aMesGCP = aFullMesGCP.FilterNonEmptyMeasure(0);
+    cSetMesGndPt * aMesGCP = aFullMesGCP.FilterNonEmptyMeasure(0);
 
     cStdWeighterResidual aWeighter(aGCPW,1);
     mBA.AddGCP(aFolder,aGCPW.at(0),aWeighter,aMesGCP);

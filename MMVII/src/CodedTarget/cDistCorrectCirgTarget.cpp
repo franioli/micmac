@@ -45,7 +45,7 @@ class cAppliCorrecDistCircTarget : public cMMVII_Appli
 	void EstimateRay();
 	tREAL8  EstimateOneRay(const cSaveExtrEllipe &);
 
-	cSimulProjEllispe  EstimateRealCenter(const cMes1GCP &);
+	cSimulProjEllispe  EstimateRealCenter(const cMes1Gnd3D &);
 	void               EstimateRealCenter();
 
         cCollecSpecArg2007 & ArgObl(cCollecSpecArg2007 & anArgObl) override ;
@@ -59,7 +59,7 @@ class cAppliCorrecDistCircTarget : public cMMVII_Appli
         std::string                 mNameIm;
         cSensorImage *              mSensor;
         cSensorCamPC *              mCamPC;
-        cSetMesImGCP                mMesImGCP;
+        cSetMesGndPt                mMesImGCP;
 	bool                        mSaveMeasure;
 
 	std::string                 mPostfixReport;
@@ -114,7 +114,7 @@ cCollecSpecArg2007 & cAppliCorrecDistCircTarget::ArgOpt(cCollecSpecArg2007 & anA
 
 tREAL8  cAppliCorrecDistCircTarget::EstimateOneRay(const cSaveExtrEllipe & aSEE)
 {
-     const cMes1GCP &  aGCP =   mMesImGCP.MesGCPOfName(aSEE.mNameCode);
+     const cMes1Gnd3D &  aGCP =   mMesImGCP.MesGCPOfName(aSEE.mNameCode);
      cPlane3D aPlaneT  = cPlane3D::FromPtAndNormal(aGCP.mPt,mNormal);  // plane of the 3D ground target
 
      cEllipse aEl = mSensor->EllipseIm2Plane(aPlaneT,aSEE.mEllipse,50);
@@ -141,7 +141,7 @@ void cAppliCorrecDistCircTarget::EstimateRay()
 }
 
 
-cSimulProjEllispe cAppliCorrecDistCircTarget::EstimateRealCenter(const cMes1GCP & aGCP)
+cSimulProjEllispe cAppliCorrecDistCircTarget::EstimateRealCenter(const cMes1Gnd3D & aGCP)
 {
     cSimulProjEllispe aRes;
     const cPt3dr & aCenterTarget =  aGCP.mPt;
@@ -182,7 +182,7 @@ void cAppliCorrecDistCircTarget::EstimateRealCenter()
    cStdStatRes aStat;
    for (auto & aMesIm : aSetMesIm.Measures())
    {
-        const cMes1GCP &  aGCP = mMesImGCP.MesGCPOfName(aMesIm.mNamePt);
+        const cMes1Gnd3D &  aGCP = mMesImGCP.MesGCPOfName(aMesIm.mNamePt);
 
         cSimulProjEllispe aSPE = EstimateRealCenter(aGCP);
 

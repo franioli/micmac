@@ -39,7 +39,7 @@ public :
 
     //  Do the kernel job : add topo constraints to the system
     void AddTopoEquations(cResolSysNonLinear<tREAL8> &);
-    void AddPointsFromDataToGCP(cSetMesImGCP &aFullMesGCP, std::vector<cBA_GCP*> * aVGCP); //< get creates points in gcp from points names in data from mAllTopoDataIn, clear mAllTopoDataIn
+    void AddPointsFromDataToGCP(cSetMesGndPt &aFullMesGCP, std::vector<cBA_GCP*> * aVGCP); //< get creates points in gcp from points names in data from mAllTopoDataIn, clear mAllTopoDataIn
     void FromData(const std::vector<cBA_GCP *> &vGCP, cPhotogrammetricProject *aPhProj); //< get data from mAllTopoDataIn
     void ToFile(const std::string & aName) const;
     void print();
@@ -60,7 +60,7 @@ public :
     const tStationsMap& getAllStations() const { return mAllStations; }
     const tSimpleObsMap& gAllSimpleObs() const { return mAllSimpleObs; }
 
-    friend void BenchTopoComp1example(const std::pair<cTopoData, cSetMesGCP>& aBenchData, tREAL4 targetSigma0);
+    friend void BenchTopoComp1example(const std::pair<cTopoData, cSetMesGnd3D>& aBenchData, tREAL4 targetSigma0);
 private :
     cTopoData mAllTopoDataIn;
     cPhotogrammetricProject * mPhProj;

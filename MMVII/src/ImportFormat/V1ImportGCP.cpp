@@ -52,13 +52,13 @@ int cAppli_ConvertV1V2_GCPIM::Exe()
 {
     mPhProj.FinishInit();
 
-    cSetMesGCP  aMesGCP;
+    cSetMesGnd3D  aMesGCP;
     bool  useGCP=false;
     if (mNameGCP != MMVII_NONE)
     {
         aMesGCP = ImportMesGCPV1(mNameGCP,"FromV1-"+LastPrefix(mNameGCP));
         useGCP = true;
-	mPhProj.SaveGCP(aMesGCP);
+	mPhProj.SaveGCP3D(aMesGCP);
         // std::string aNameOut = mPhProj.DPPointsMeasures().FullDirOut() + cSetMesGCP::ThePrefixFiles + "_" + mNameGCP;
         // aMesGCP.ToFile(aNameOut);
     }
@@ -76,7 +76,7 @@ int cAppli_ConvertV1V2_GCPIM::Exe()
 
     if (useGCP && useIm && mPhProj.DPOrient().DirInIsInit())
     {
-          cSetMesImGCP aMesImGCP;
+          cSetMesGndPt aMesImGCP;
           aMesImGCP.AddMes3D(aMesGCP);
 
           for (const auto & aMesIm : aLMesIm)

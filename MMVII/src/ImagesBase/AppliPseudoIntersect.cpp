@@ -224,7 +224,7 @@ int cAppli_PseudoIntersect::Exe()
         }
     }
 
-    cSetMesGCP aMesGCP("PseudoIntersect");
+    cSetMesGnd3D aMesGCP("PseudoIntersect");
     for (const auto & [aStr,aList] : aMapMatch )
     {
         if (aList.size()>=2)
@@ -250,14 +250,14 @@ int cAppli_PseudoIntersect::Exe()
                 StdOut() << "\n";
             }
             if (std::isfinite(aBundleDebugged.mDistPix))
-                aMesGCP.AddMeasure( cMes1GCP(aBundleDebugged.mPG, aStr, -1., "From pseudo-intersection") );
+                aMesGCP.AddMeasure3D( cMes1Gnd3D(aBundleDebugged.mPG, aStr, -1., "From pseudo-intersection") );
             //StdOut() << "\n";
         }
     }
 
     StdOut() << "Total: " << aMesGCP.Measures().size() << " successfully intersected\n";
 
-    mPhProj.SaveGCP(aMesGCP);
+    mPhProj.SaveGCP3D(aMesGCP);
 
     tPtrSysCo aSysCo = mPhProj.CurSysCoOri(true);
     if (!aSysCo)

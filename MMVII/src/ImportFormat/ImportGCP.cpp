@@ -119,7 +119,7 @@ int cAppli_ImportGCP::Exe()
        if (IsPrefixed(mNameGCP))
          mNameGCP = LastPrefix(mNameGCP);
     }
-    cSetMesGCP aSetM(mNameGCP);
+    cSetMesGnd3D aSetM(mNameGCP);
 
     //  Extract chang of coordinate, if not set  handled by default
     cChangeSysCo & aChSys = mPhProj.ChSysCo();
@@ -188,12 +188,12 @@ int cAppli_ImportGCP::Exe()
         if (withPatternAddInfoFree && MatchRegex(aAdditionalInfo,mPatternAddInfoFree))
            aSigma = -1;
 
-        cMes1GCP aMesGCP(aChSys.Value(aVPts[aKL]*mMulCoord),aNamePoint,aSigma,aAdditionalInfo);
+        cMes1Gnd3D aMesGCP(aChSys.Value(aVPts[aKL]*mMulCoord),aNamePoint,aSigma,aAdditionalInfo);
         if (wSigmaX && (aSigma>0)) // dont use sigma if point is free
             aMesGCP.SetSigma2(aNRFS.GetPt3dr(aKL,mFieldSx,mFieldSy,mFieldSz));
-        aSetM.AddMeasure(aMesGCP);
+        aSetM.AddMeasure3D(aMesGCP);
     }
-    mPhProj.SaveGCP(aSetM);
+    mPhProj.SaveGCP3D(aSetM);
     mPhProj.SaveCurSysCoGCP(aChSys.SysTarget());
 
     return EXIT_SUCCESS;

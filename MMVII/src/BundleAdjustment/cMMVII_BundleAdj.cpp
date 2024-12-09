@@ -115,7 +115,7 @@ cMMVII_BundleAdj::~cMMVII_BundleAdj()
     delete mTopo;
     delete mBlClino;
     // DeleteAllAndClear(mGCP_UK);
-    DeleteAllAndClear(mVGCP);
+    DeleteAllAndClear(mGCP);
 }
 
 void cMMVII_BundleAdj::ShowUKNames() 
@@ -544,7 +544,7 @@ void cMMVII_BundleAdj::CompileSharedIntrinsicParams(bool ForAvg)
 bool cMMVII_BundleAdj::CheckGCPConstraints() const
 {
     std::string aNames;
-    for (const auto & aBA_GCP_Ptr : mVGCP)
+    for (const auto & aBA_GCP_Ptr : mGCP)
     {
         for (const auto & aMesGCP : aBA_GCP_Ptr->mMesGCP->MesGCP())
         {

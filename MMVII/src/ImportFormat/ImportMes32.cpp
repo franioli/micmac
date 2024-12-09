@@ -95,7 +95,7 @@ int cAppli_ImportM32::Exe()
        // create structur to import in MMVII representation
     if (mAddIm2NamePt)
         mNameGCP = mNameGCP + mNameImage;
-    cSetMesGCP aSetGCP(mNameGCP);
+    cSetMesGnd3D aSetGCP(mNameGCP);
     cSetMesPtOf1Im aSetIm(mNameImage);
 
        // parse all object to push them in low MVVII
@@ -109,15 +109,15 @@ int cAppli_ImportM32::Exe()
          {
             aNamePt = aNamePt + "_" + mNameImage;
          }
-	 cMes1GCP aMesGCP(aP3,aNamePt,1.0);
+	 cMes1Gnd3D aMesGCP(aP3,aNamePt,1.0);
 	 cMesIm1Pt aMesIm(aP2,aNamePt,1.0);
 
-	 aSetGCP.AddMeasure(aMesGCP);
+	 aSetGCP.AddMeasure3D(aMesGCP);
          aSetIm.AddMeasure(aMesIm);
     }
 
        // save object
-    mPhProj.SaveGCP(aSetGCP);
+    mPhProj.SaveGCP3D(aSetGCP);
     mPhProj.SaveMeasureIm(aSetIm);
 
     if (mPhProj.SysCoIsInit())

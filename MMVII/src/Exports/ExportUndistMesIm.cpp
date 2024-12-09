@@ -56,7 +56,7 @@ int cAppli_ExportUndistMesIm::Exe()
     for (const std::string& aCImage : aVecIm)
     {
 
-		cSetMesImGCP aSetMes;
+		cSetMesGndPt aSetMes;
 
 		//load calibration
 		cPerspCamIntrCalib * aCal = mPhProj.InternalCalibFromStdName(aCImage);

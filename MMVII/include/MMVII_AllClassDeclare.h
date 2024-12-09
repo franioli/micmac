@@ -267,11 +267,11 @@ class cSetMesPtOf1Im;
 
 class cMesIm1Pt;
 class cSetMesPtOf1Im;
-class cMes1GCP;
-class cSetMesGCP;
+class cMes1Gnd3D;
+class cSetMesGnd3D;
 
 class cMultipleImPt;
-class cSetMesImGCP;
+class cSetMesGndPt;
 
 class cVecTiePMul;
 class cTiePMul;
@@ -299,9 +299,9 @@ struct cSet2D3D ;            // Set of cWeightedPair2D3D
 class cHomogCpleIm;
 class cSetHomogCpleIm;
 
-class cSetMesImGCP;
+class cSetMesGndPt;
 class cMultipleImPt;
-class cSetMesGCP ;
+class cSetMesGnd3D ;
 class cSetMesPtOf1Im ;
 class cMesIm1Pt;
 

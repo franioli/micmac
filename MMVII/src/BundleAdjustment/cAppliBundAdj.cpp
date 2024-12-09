@@ -63,8 +63,9 @@ class cAppliBundlAdj : public cMMVII_Appli
      private :
 
         std::vector<tREAL8>  ConvParamStandard(const std::vector<std::string> &,size_t aSzMin,size_t aSzMax) ;
-        /// New Method for multiple GCP : each 
-        void  AddOneSetGCP(const std::vector<std::string> & aParam, bool aDoAddNewTopoPoints); //< Add topo new points only on last gcp set
+
+        void  AddOneSetGCP3D(const std::string & aFolder, tREAL8 aWFactor);
+        void  AddOneSetGCP2D(const std::string & aFolder, const std::vector<std::string> & aParam);
         void  AddOneSetTieP(const std::vector<std::string> & aParam);
 
 	std::string               mSpecImIn;
@@ -201,8 +202,8 @@ void  cAppliBundlAdj::AddOneSetGCP(const std::vector<std::string> & aVParStd, bo
 */
     
     //  load the GCP
-    cSetMesImGCP  aFullMesGCP;
-    mPhProj.LoadGCPFromFolder(aFolder, aFullMesGCP,
+    cSetMesGndPt  aFullMesGCP;
+    mPhProj.LoadGCP3DFromFolder(aFolder, aFullMesGCP,
                               {aDoAddNewTopoPoints?mBA.getTopo():nullptr, aDoAddNewTopoPoints?&mBA.getVGCP():nullptr},
                               "", mGCPFilter, mGCPFilterAdd);
 
@@ -211,7 +212,7 @@ void  cAppliBundlAdj::AddOneSetGCP(const std::vector<std::string> & aVParStd, bo
         // Load the images measure + init sens 
         mPhProj.LoadImFromFolder(aFolder,aFullMesGCP,aSens->NameImage(),aSens,SVP::Yes);
     }
-    cSetMesImGCP * aMesGCP = aFullMesGCP.FilterNonEmptyMeasure(0);
+    cSetMesGndPt * aMesGCP = aFullMesGCP.FilterNonEmptyMeasure(0);
 
     cStdWeighterResidual aWeighter(aGCPW,1);
     mBA.AddGCP(aFolder,aGCPW.at(0),aWeighter,aMesGCP);

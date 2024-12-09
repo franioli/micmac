@@ -560,21 +560,21 @@ class cPhotogrammetricProject
 	  /// Load the measure image from a specified folder, usefull when multiple folder
 	  cSetMesPtOf1Im LoadMeasureImFromFolder(const std::string & aFolder,const std::string &) const;
 
-         void LoadGCP(cSetMesImGCP&,const std::string & aPatFiltrFile="",const std::string & aFiltrNameGCP="",
+         void LoadGCP(cSetMesGndPt&,const std::string & aPatFiltrFile="",const std::string & aFiltrNameGCP="",
                       const std::string & aFiltrAdditionalInfoGCP="") const;
 	 ///  For reading GCP from folder potentially != of standard input measures, can add missing points from topo obs
-         void LoadGCPFromFolder(const std::string & aFolder,cSetMesImGCP&,
+         void LoadGCP3DFromFolder(const std::string & aFolder,cSetMesGndPt&,
                                 std::pair<cBA_Topo *, std::vector<cBA_GCP*>*> aTopoAddPointsInfo,
                                 const std::string & aPatFiltrFile="", const std::string & aFiltrNameGCP="",
                                 const std::string & aFiltrAdditionalInfoGCP="" ) const;
           // if SVP && file doesnt exist, do nothing
-	  void LoadIm(cSetMesImGCP&,const std::string & aNameIm,cSensorImage * =nullptr,bool SVP=false) const;
+	  void LoadIm(cSetMesGndPt&,const std::string & aNameIm,cSensorImage * =nullptr,bool SVP=false) const;
           ///  When dont read from the standard input 
-	  void LoadImFromFolder(const std::string & aFolder,cSetMesImGCP&,const std::string & aNameIm,
+	  void LoadImFromFolder(const std::string & aFolder,cSetMesGndPt&,const std::string & aNameIm,
                                 cSensorImage * =nullptr,bool SVP=false) const;
-	  void LoadIm(cSetMesImGCP&,cSensorImage & ) const;
+	  void LoadIm(cSetMesGndPt&,cSensorImage & ) const;
 
-	  void SaveGCP(const cSetMesGCP&) const;
+	  void SaveGCP3D(const cSetMesGnd3D&) const;
 
 	  /// Name of the file, usefull if we need to test existence before doing anything
 	  std::string NameMeasureGCPIm(const std::string & aNameIm,bool isIn) const;

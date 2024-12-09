@@ -87,7 +87,7 @@ class  cPtCheck
        const cMultipleImPt *  mIm;
        cPt2dr                 mP2ImInit;
        cPt2dr                 mP2ImCorr;
-       const cMes1GCP *       mGr;
+       const cMes1Gnd3D *       mGr;
        cPt2di                 mId;
        bool                   mIsOk;
        bool                   mIsZ0;
@@ -106,7 +106,7 @@ class cAppli_CheckGCPDist : public cMMVII_Appli
      private :
 
 	/// give the point their grid Id, init IsZ0,  init Nb0, Nb1
-        void   ComputeGridId(const cSetMesImGCP & aSetMes);
+        void   ComputeGridId(const cSetMesGndPt & aSetMes);
 	///  compute homography Plane -> Im for point in the main plane (Z~0 in CERN-pannel)
         bool   ComputeMainHomogr(cHomogr2D<tREAL8> &);
 	///  for the point up (Z~200 in CERN pannel), compute the homography as a perturbation to previous one
@@ -198,7 +198,7 @@ cCollecSpecArg2007 & cAppli_CheckGCPDist::ArgOpt(cCollecSpecArg2007 & anArgOpt)
 
 
 
-void   cAppli_CheckGCPDist::ComputeGridId(const cSetMesImGCP & aSetMes)  
+void   cAppli_CheckGCPDist::ComputeGridId(const cSetMesGndPt & aSetMes)  
 {
     mSupId = cPt2di(-1000,-1000);
     cHomogr2D<tREAL8> aHNum ;
@@ -208,7 +208,7 @@ void   cAppli_CheckGCPDist::ComputeGridId(const cSetMesImGCP & aSetMes)
     {
         aVNum.push_back(ToR(aPair.second));
 	SetSupEq(mSupId,aPair.second);
-        const cMes1GCP & aGCP = aSetMes.MesGCPOfName(aPair.first);
+        const cMes1Gnd3D & aGCP = aSetMes.MesGCPOfName(aPair.first);
         aVPlani.push_back(Proj(aGCP.mPt));
     }
     mSupId += cPt2di(1,1);
@@ -364,7 +364,7 @@ void cAppli_CheckGCPDist::MakeOneIm(const std::string & aNameIm)
 {
     mCurNameIm = aNameIm;
 
-    cSetMesImGCP  aSetMes;
+    cSetMesGndPt  aSetMes;
     mPhProj.LoadGCP(aSetMes);
     mPhProj.LoadIm(aSetMes,aNameIm);
 

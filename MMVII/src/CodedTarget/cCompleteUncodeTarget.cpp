@@ -46,7 +46,7 @@ class cAppliCompletUncodedTarget : public cMMVII_Appli
 
 
 	void CompleteAll();
-	void CompleteOneGCP(const cMes1GCP & aGCP);
+	void CompleteOneGCP(const cMes1Gnd3D & aGCP);
 
         cCollecSpecArg2007 & ArgObl(cCollecSpecArg2007 & anArgObl) override ;
         cCollecSpecArg2007 & ArgOpt(cCollecSpecArg2007 & anArgOpt) override ;
@@ -65,7 +65,7 @@ class cAppliCompletUncodedTarget : public cMMVII_Appli
         std::string                    mNameIm;
         cSensorImage *                 mSensor;
         cSensorCamPC *                 mCamPC;
-        cSetMesImGCP                   mMesImGCP;
+        cSetMesGndPt                   mMesImGCP;
         cSetMesPtOf1Im                 mImageM;
         std::vector<cSaveExtrEllipe>   mVSEE;
 	std::string                    mNameReportEllipse;
@@ -106,7 +106,7 @@ cCollecSpecArg2007 & cAppliCompletUncodedTarget::ArgOpt(cCollecSpecArg2007 & anA
           ;
 }
 
-void cAppliCompletUncodedTarget::CompleteOneGCP(const cMes1GCP & aGCP)
+void cAppliCompletUncodedTarget::CompleteOneGCP(const cMes1Gnd3D & aGCP)
 {
     // if has already been selected, nothing to do
     if (mImageM.NameHasMeasure(aGCP.mNamePt))
