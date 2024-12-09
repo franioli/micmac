@@ -74,7 +74,8 @@ class cAppliBundlAdj : public cMMVII_Appli
 	cPhotogrammetricProject   mPhProj;
 	cMMVII_BundleAdj          mBA;
 
-	std::vector<std::string>  mGCPW;
+    tREAL8                    mGCP3DW; // gcp ground coords sigma factor
+    std::vector<std::string>  mGCP2DW; // gcp image coords sigma factor
 	std::vector<std::vector<std::string>>  mAddGCPW; // In case there is multiple GCP Set
         std::string               mGCPFilter;  // pattern to filter names of GCP
         std::string               mGCPFilterAdd;  // pattern to filter GCP by additional info
@@ -103,6 +104,7 @@ cAppliBundlAdj::cAppliBundlAdj(const std::vector<std::string> & aVArgs,const cSp
    mDataDir        ("Std"),
    mPhProj         (*this),
    mBA             (&mPhProj),
+   mGCP3DW         (1.0),
    mGCPFilter      (""),
    mGCPFilterAdd   (""),
    mNbIter         (10),
@@ -129,7 +131,8 @@ cCollecSpecArg2007 & cAppliBundlAdj::ArgOpt(cCollecSpecArg2007 & anArgOpt)
           anArgOpt
       << AOpt2007(mDataDir,"DataDir","Default data directories ",{eTA2007::HDV})
       << AOpt2007(mNbIter,"NbIter","Number of iterations",{eTA2007::HDV})
-      << mPhProj.DPPointsMeasures().ArgDirInOpt("GCPDir","Dir for GCP if != DataDir")
+      << mPhProj.DPGndPt3D().ArgDirInOpt("GndPt3DDir","Dir for GCP ground coords")
+      << mPhProj.DPGndPt2D().ArgDirInOpt("GndPt2DDir","Dir for GCP image coords")
       << mPhProj.DPMulTieP().ArgDirInOpt("TPDir","Dir for Tie Points if != DataDir")
       << mPhProj.DPRigBloc().ArgDirInOpt("BRDirIn","Dir for Bloc Rigid if != DataDir") //  RIGIDBLOC
       << mPhProj.DPRigBloc().ArgDirOutOpt() //  RIGIDBLOC
@@ -137,17 +140,12 @@ cCollecSpecArg2007 & cAppliBundlAdj::ArgOpt(cCollecSpecArg2007 & anArgOpt)
       << mPhProj.DPTopoMes().ArgDirOutOpt("TopoDirOut","Dir for Topo measures output") //  TOPO
       << mPhProj.DPClinoMeters().ArgDirInOpt("ClinoDirIn","Dir for Clino if != DataDir") //  CLINOBLOC
       << mPhProj.DPClinoMeters().ArgDirOutOpt("ClinoDirOut","Dir for Clino if != DataDir") //  CLINOBLOC
-      << AOpt2007
-         (
-            mGCPW,
-            "GCPW",
-            "GCP Weight [SigG,SigI,SigAt?=-1,Thrs?=-1,Exp?=1], SG=0 fix, SG<0 schurr elim, SG>0",
-            {{eTA2007::ISizeV,"[2,5]"}}
-         )
+      << AOpt2007 ( mGCP3DW, "GCP3DW", "GCP ground coords sigma factor, SG=0 fix, SG<0 schurr elim, SG>0",{eTA2007::HDV})
+      << AOpt2007 ( mGCP2DW, "GCP2DW", "GCP image coords sigma factor [SigI,SigAt?=-1,Thrs?=-1,Exp?=1]",  {{eTA2007::ISizeV,"[1,4]"}})
       << AOpt2007(mAddGCPW,"AddGCPW","For additional GPW, [[Folder,SigG...],[Folder,...]] ")
       << AOpt2007(mGCPFilter,"GCPFilter","Pattern to filter GCP by name")
       << AOpt2007(mGCPFilterAdd,"GCPFilterAdd","Pattern to filter GCP by additional info")
-      << mPhProj.DPPointsMeasures().ArgDirOutOpt("GCPDirOut","Dir for output GCP")
+      << mPhProj.DPGndPt3D().ArgDirOutOpt("GndPt3DDirOut","Dir for GCP output ground coord")
       << AOpt2007(mTiePWeight,"TiePWeight","Tie point weighting [Sig0,SigAtt?=-1,Thrs?=-1,Exp?=1]",{{eTA2007::ISizeV,"[1,4]"}})
       << AOpt2007(mAddTieP,"AddTieP","For additional TieP, [[Folder,SigG...],[Folder,...]] ")
       << AOpt2007(mPatParamFrozCalib,"PPFzCal","Pattern for freezing internal calibration parameters")
@@ -244,7 +242,6 @@ int cAppliBundlAdj::Exe()
 */
 
     //   ========== [0]   initialisation of def values  =============================
-    mPhProj.DPPointsMeasures().SetDirInIfNoInit(mDataDir);
     mPhProj.DPMulTieP().SetDirInIfNoInit(mDataDir);
     mPhProj.DPRigBloc().SetDirInIfNoInit(mDataDir); //  RIGIDBLOC
 
@@ -290,10 +287,10 @@ int cAppliBundlAdj::Exe()
         mBA.AddTopo();
     }
 
-    if (IsInit(&mGCPW))  // Add if any first the standard GCP weighting
+    if (mPhProj.DPGndPt3D().DirInIsInit())
     {
-        std::vector<std::string>  aVParamStdGCP{mPhProj.DPPointsMeasures().DirIn()};
-        AppendIn(aVParamStdGCP,mGCPW);
+        std::vector<std::string>  aVParamStdGCP{mPhProj.DPGndPt3D().DirIn()};
+        AppendIn(aVParamStdGCP, {mGCP3DW} );
         AddOneSetGCP(aVParamStdGCP, mAddGCPW.empty());
     }
     // Add  the potential suplementary GCP

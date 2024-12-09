@@ -74,9 +74,9 @@ cCollecSpecArg2007 & cAppliTopoAdj::ArgObl(cCollecSpecArg2007 & anArgObl)
 {
     return anArgObl
             << mPhProj.DPTopoMes().ArgDirInMand("Dir for Topo measures")
-            << mPhProj.DPPointsMeasures().ArgDirInMand("Dir for initial coordinates")
+            << mPhProj.DPGndPt3D().ArgDirInMand("Dir for initial coordinates")
             << mPhProj.DPTopoMes().ArgDirOutMand("Dir for Topo measures output")
-            << mPhProj.DPPointsMeasures().ArgDirOutMand("Dir for final coordinates")
+            << mPhProj.DPGndPt3D().ArgDirOutMand("Dir for final coordinates")
            ;
 }
 
@@ -91,7 +91,6 @@ cCollecSpecArg2007 & cAppliTopoAdj::ArgOpt(cCollecSpecArg2007 & anArgOpt)
       << AOpt2007(mNbIter,"NbIter","Number of iterations",{eTA2007::HDV})
       << AOpt2007(mGCPFilter,"GCPFilter","Pattern to filter GCP by name")
       << AOpt2007(mGCPFilterAdd,"GCPFilterAdd","Pattern to filter GCP by additional info")
-      << mPhProj.DPPointsMeasures().ArgDirOutOpt("GCPDirOut","Dir for output GCP")
       << AOpt2007(mLVM,"LVM","Levenberg–Marquardt parameter (to have better conditioning of least squares)",{eTA2007::HDV})
     ;
 }
@@ -147,7 +146,6 @@ void  cAppliTopoAdj::AddOneSetTieP(const std::vector<std::string> & aVParStd)
 
 int cAppliTopoAdj::Exe()
 {
-    mPhProj.DPPointsMeasures().SetDirInIfNoInit(mDataDir);
     mPhProj.FinishInit();
 
 
@@ -155,7 +153,7 @@ int cAppliTopoAdj::Exe()
 
     std::vector<std::string> aGCPW;
     aGCPW.push_back(cStrIO<double>::ToStr(mGCPW));
-    std::vector<std::string>  aVParamStdGCP{mPhProj.DPPointsMeasures().DirIn()};
+    std::vector<std::string>  aVParamStdGCP{mPhProj.DPGndPt3D().DirIn()};
     AppendIn(aVParamStdGCP,aGCPW);
     AddOneSetGCP(aVParamStdGCP);
 
@@ -187,8 +185,8 @@ cSpecMMVII_Appli  TheSpec_TopoAdj
       Alloc_TopoAdj,
       "Topo adjustment",
       {eApF::Topo},
-      {eApDT::GCP},
-      {eApDT::GCP},
+      {eApDT::GndPt3D, eApDT::Topo},
+      {eApDT::GndPt3D},
       __FILE__
 );
 

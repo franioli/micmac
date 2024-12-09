@@ -85,12 +85,13 @@ cAppli_CGPReport::cAppli_CGPReport
 
 cCollecSpecArg2007 & cAppli_CGPReport::ArgObl(cCollecSpecArg2007 & anArgObl)
 {
-      return anArgObl
-              << Arg2007(mSpecImIn,"Pattern/file for images",{{eTA2007::MPatFile,"0"},{eTA2007::FileDirProj}})
-              << (mIsGCP ?  mPhProj.DPPointsMeasures().ArgDirInMand()
-                         :  mPhProj.DPMulTieP().ArgDirInMand())
-              <<  mPhProj.DPOrient().ArgDirInMand()
-           ;
+      anArgObl << Arg2007(mSpecImIn,"Pattern/file for images",{{eTA2007::MPatFile,"0"},{eTA2007::FileDirProj}});
+      if (mIsGCP)
+          anArgObl << mPhProj.DPGndPt3D().ArgDirInMand() << mPhProj.DPGndPt2D().ArgDirInMand();
+      else
+          anArgObl << mPhProj.DPMulTieP().ArgDirInMand();
+      anArgObl <<  mPhProj.DPOrient().ArgDirInMand();
+      return anArgObl;
 }
 
 cCollecSpecArg2007 & cAppli_CGPReport::ArgOpt(cCollecSpecArg2007 & anArgOpt)
@@ -341,7 +342,7 @@ int cAppli_CGPReport::Exe()
 {
    mPhProj.FinishInit();
 
-   auto nameSubDir = mPhProj.DPOrient().DirIn() +  "_Mes-"+  mPhProj.DPPointsMeasures().DirIn();
+   auto nameSubDir = mPhProj.DPOrient().DirIn() +  "_Mes-"+  mPhProj.DPGndPt2D().DirIn();
    if (IsInit(&mSuffixReportSubDir))
        nameSubDir += "_" + mSuffixReportSubDir;
    SetReportSubDir(nameSubDir);

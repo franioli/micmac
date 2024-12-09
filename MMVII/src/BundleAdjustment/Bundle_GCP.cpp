@@ -255,12 +255,12 @@ void cMMVII_BundleAdj::Save_newGCP()
     // for (const auto & aBA_GCP_Ptr : mVGCP)
     const auto & aBA_GCP_Ptr = mVGCP.at(0);
     {
-        if (aBA_GCP_Ptr->mMesGCP  && mPhProj->DPPointsMeasures().DirOutIsInit())
+        if (aBA_GCP_Ptr->mMesGCP  && mPhProj->DPGndPt3D().DirOutIsInit())
         {
             mPhProj->SaveGCP(aBA_GCP_Ptr->mNewGCP.ExtractSetGCP("NewGCP"));
             for (const auto & aMes1Im : aBA_GCP_Ptr->mMesGCP->MesImInit())
                  mPhProj->SaveMeasureIm(aMes1Im);
-            mPhProj->SaveCurSysCoGCP(mPhProj->CurSysCo(mPhProj->DPPointsMeasures()));
+            mPhProj->SaveCurSysCoGCP(mPhProj->CurSysCo(mPhProj->DPGndPt3D()));
         }
     }
 }
