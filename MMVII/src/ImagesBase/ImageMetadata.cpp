@@ -60,6 +60,13 @@ void cAppli_ImageMetadata::ShowMetadata(const std::string &aName)
         }
         CSLDestroy(MDL);
     }
+    std::cout << " - Null domain\n";
+    auto MD = aDataSet->GetMetadata(nullptr);
+    if (MD != nullptr) {
+        for (char **md = MD; *md; md++) {
+            std::cout << "    . '" << *md << "'\n";
+        }
+    }
 
 }
 

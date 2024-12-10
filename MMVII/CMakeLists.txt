@@ -58,6 +58,10 @@ endif()
 # GDAL
 find_package(GDAL 3.4 REQUIRED)
 
+# EXIF 
+find_package(PkgConfig)
+pkg_search_module(libexif REQUIRED libexif)
+
 # Threads
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads)
