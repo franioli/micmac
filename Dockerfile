@@ -1,45 +1,61 @@
-FROM ubuntu:latest
-MAINTAINER Ewelina Rupnik <ewelina.rupnik@ign.fr>
+FROM ubuntu:22.04 
 
-ARG DEBIAN_FRONTEND=noninteractive
+# Add metadata
+LABEL description="MicMac Photogrammetry Software Container for Headless systems"
 
-# Set the working directory
-ENV foo /etc/opt/
-WORKDIR ${foo}   
+# Set environment variables
+ENV DEBIAN_FRONTEND=noninteractive
+ENV PYTHONUNBUFFERED=1
+ENV MICMAC_DIR=/opt/micmac
+ENV PATH=${MICMAC_DIR}/bin:$PATH
 
-#IGN server specifique
-#RUN export http_proxy="http://proxy.ign.fr:3128"
-#RUN export https_proxy="https://proxy.ign.fr:3128"
+# Set working directory
+WORKDIR /opt
 
 #MicMac dependencies
 RUN apt-get update && apt-get install -y \
-		    build-essential \
-		    make \
-                    cmake \ 
-                    git \
-                    proj-bin \
-		    exiv2 \
-                    exiftool \
-                    imagemagick \
-		    xorg \
-            	    openbox \
-                    qt5-default \
-                    meshlab \
-                    vim
-
+    build-essential \
+    make \
+    cmake \ 
+    git \
+    proj-bin \
+    exiv2 \
+    exiftool \
+    imagemagick \
+    xorg \
+    qtbase5-dev \
+    qt5-qmake \
+    btop \ 
+    nano \
+    bash-completion \
+    python3 \
+    python3-pip
 
 #MicMac clone
-#IGN-specific proxy setting
-#RUN git config --global http.proxy http://proxy.ign.fr:3128
-#RUN git config --global https.proxy https://proxy.ign.fr:3128
 RUN git clone https://github.com/micmacIGN/micmac.git
 
 #MicMac build & compile
-WORKDIR micmac
-RUN mkdir build
-WORKDIR build
-RUN cmake ../ && make install -j8
+RUN cd micmac && \
+    mkdir build && \
+    cd build && \
+    cmake ../ && make install -j16
 
 #MicMac add environmental variable to executables
-ENV PATH=$foo"micmac/bin/:${PATH}"
-RUN echo $foo"micmac/bin/:${PATH}"
+RUN echo "${MICMAC_DIR}/bin/:${PATH}"
+
+# Configure bash environment
+RUN \
+    # Add aliases for python and pip 
+    echo "# Bash Aliases" >> /root/.bashrc && \
+    echo "alias python=python3" >> /root/.bashrc && \
+    echo "alias pip=pip3" >> /root/.bashrc && \
+    echo "" >> /root/.bashrc && \
+    # Enable bash completion
+    echo "# Enable bash completion" >> /root/.bashrc && \
+    echo "if [ -f /etc/bash_completion ]; then . /etc/bash_completion; fi" >> /root/.bashrc && \
+    echo "" >> /root/.bashrc
+
+WORKDIR /workspace
+
+# Set entrypoint
+ENTRYPOINT ["/bin/bash"]

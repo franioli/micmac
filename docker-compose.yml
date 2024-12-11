@@ -1,0 +1,13 @@
+# docker-compose.yml
+services:
+  micmac:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: run-micmac
+    volumes:
+      - $HOME/rse_aletsch:/workspace
+    environment:
+      - MICMAC_DIR=/opt/micmac
+    stdin_open: true  # docker run -i
+    tty: true        # docker run -t
